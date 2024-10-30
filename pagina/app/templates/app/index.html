@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Perla negra</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'app/css/estilo.css' %}">
+    <link rel="stylesheet" href="{% static 'app/css/navbar.css' %}">
+    <link href="https://fonts.googleapis.com/css2?family=Permanent+Marker&display=swap" rel="stylesheet">
+    
+    
+</head>
+<body>
+    <div class="container">
+        
+        <nav>
+            <ul>
+                <li><a href="{% url 'inicio' %}">Inicio</a></li>
+                <li><a href="{% url 'tatuadores' %}">Tatuadores</a></li>
+                <li class="dropdown">
+                    <a href="javascript:void(0)" class="dropbtn">Agregar Datos</a>
+                    <div class="dropdown-content">
+                        <a href="{% url 'agregar_tatuador' %}">Agregar Tatuador</a>
+                        <a href="{% url 'agregar_cliente' %}">Agregar Cliente</a>
+                        <a href="{% url 'agregar_cita' %}">Agregar Cita</a>
+                    </div>
+                </li>
+            </ul>
+        </nav>
+        {% if request.path == '/' or request.path == '/index/' %}  
+            <img src="{% static 'app/images/dragonblanco.png' %}" alt="Logo" class="logo">
+
+            <h1>        
+                <span>Perla</span>
+                <span>Negra</span>
+                <span>Ink</span>
+            </h1>
+        {% endif %}            
+        {% block content %}
+        {% endblock %}
+    </div>
+</body>
+</html>

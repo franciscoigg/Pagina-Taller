@@ -1,0 +1,41 @@
+body, html {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    font-family: 'Permanent Marker', cursive;
+    background-color: black;
+}
+
+.container {
+    background-image: url('../images/iniciomano.jpeg'); 
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    height: 100vh; 
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    color: white;
+}
+
+
+h1 {
+    font-size: 3em;
+    letter-spacing: 5px;
+    text-transform: uppercase;
+    display: flex;
+    flex-direction: column; 
+    text-align: left;
+}
+
+.header {
+    display: 50px;
+    align-items: center;
+    justify-content: center; 
+}
+
+.logo {
+    width: 200px; 
+    margin-right: 20px;
+}
