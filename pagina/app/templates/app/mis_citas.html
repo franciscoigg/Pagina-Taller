@@ -1,0 +1,52 @@
+{% extends 'app/index.html' %}
+
+{% block content %}
+<div class="form-container">
+    <h2>Mis Citas</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Fecha</th>
+                <th>Hora</th>
+                <th>Estado</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for cita in citas %}
+            <tr>
+                <td>{{ cita.fecha }}</td>
+                <td>{{ cita.hora }}</td>
+                <td>{{ cita.estado.nombre }}</td>
+                <td>
+                    {% if cita.estado.nombre != "Cancelada" %}
+                        <form action="{% url 'cancelar_cita_cliente' cita.cita_id %}" method="post" style="display:inline;">
+                            {% csrf_token %}
+                            <button type="submit">Cancelar</button>
+                        </form>
+                        <button onclick="document.getElementById('edit-form-{{ cita.cita_id }}').style.display='block'">Editar</button>
+                        <div id="edit-form-{{ cita.cita_id }}" style="display:none;">
+                            <form action="{% url 'editar_cita_cliente' cita.cita_id %}" method="post">
+                                {% csrf_token %}
+                                <label for="fecha">Nueva Fecha:</label>
+                                <input type="date" name="fecha" value="{{ cita.fecha }}" required>
+                                <label for="hora">Nueva Hora:</label>
+                                <input type="time" name="hora" value="{{ cita.hora }}" required>
+                                <button type="submit">Guardar</button>
+                                <button type="button" onclick="document.getElementById('edit-form-{{ cita.cita_id }}').style.display='none'">Cancelar</button>
+                            </form>
+                        </div>
+                    {% else %}
+                        <span>Cita cancelada</span>
+                    {% endif %}
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="4">No tienes citas solicitadas.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

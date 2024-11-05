@@ -1,0 +1,100 @@
+
+.login-container {
+    max-width: 400px;
+    margin: 50px auto;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.h1-form {
+    text-align: center;
+    color: #424242; /* Color del título */
+}
+
+.login-form {
+    display: flex;
+    flex-direction: column;
+}
+
+.login-group {
+    margin-bottom: 15px;
+}
+
+label {
+    margin-bottom: 5px;
+    font-weight: bold;
+    display: block; /* Asegura que las etiquetas ocupen todo el ancho */
+}
+
+input, select {
+    padding: 10px;
+    margin-bottom: 10px; /* Espaciado entre campos */
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    width: 100%; /* Asegura que los campos ocupen todo el ancho */
+}
+
+.login-button {
+    padding: 10px;
+    background-color: #424242;
+    border: none;
+    color: white;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.login-button:hover {
+    background-color: #4cae4c;
+}
+
+.p-login {
+    text-align: center; /* Centra el texto del pie de página */
+    margin-top: 15px;
+}
+
+.tatuadores-list {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Título de la lista de tatuadores */
+.tatuadores-title {
+    text-align: center;
+    font-size: 2rem;
+    margin-bottom: 30px;
+}
+
+/* Item individual de tatuador */
+.tatuador-item {
+    background-color: #5b5b5b74;
+    padding: 20px;
+    margin-bottom: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.tatuador-item h2 {
+    font-size: 1.6rem;
+    color: #ffffff;
+    margin-bottom: 10px;
+}
+
+.tatuador-item p {
+    font-size: 1rem;
+    color: #666;
+}
+
+.tatuador-item strong {
+    color: #ffffff;
+}
+
+/* Mensaje cuando no hay tatuadores */
+.tatuadores-list p {
+    text-align: center;
+    font-size: 1.2rem;
+    color: #999;
+}

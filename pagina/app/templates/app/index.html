@@ -1,42 +1,54 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Perla negra</title>
+    <title>Perla Negra</title>
     {% load static %}
     <link rel="stylesheet" href="{% static 'app/css/estilo.css' %}">
     <link rel="stylesheet" href="{% static 'app/css/navbar.css' %}">
+    <link rel="stylesheet" href="{% static 'app/css/form.css' %}">
+    <link rel="stylesheet" href="{% static 'app/css/cita.css' %}">
     <link href="https://fonts.googleapis.com/css2?family=Permanent+Marker&display=swap" rel="stylesheet">
-    
-    
 </head>
 <body>
     <div class="container">
-        
         <nav>
             <ul>
                 <li><a href="{% url 'inicio' %}">Inicio</a></li>
                 <li><a href="{% url 'tatuadores' %}">Tatuadores</a></li>
+                {% if user.is_authenticated and not request.user.is_staff %}
+                <li><a href="{% url 'mis_citas' %}">Mis Citas</a></li>
+                {%endif%}
+                {%if request.user.is_staff  %}
+                <li><a href="{% url 'citas' %}">Citas</a></li>
                 <li class="dropdown">
                     <a href="javascript:void(0)" class="dropbtn">Agregar Datos</a>
                     <div class="dropdown-content">
-                        <a href="{% url 'agregar_tatuador' %}">Agregar Tatuador</a>
-                        <a href="{% url 'agregar_cliente' %}">Agregar Cliente</a>
                         <a href="{% url 'agregar_cita' %}">Agregar Cita</a>
                     </div>
                 </li>
+                {%endif%}
+                {% if user.is_authenticated and not request.user.is_staff %}
+                    <li><a href="{% url 'solicitar_cita' %}">Solicitar cita</a></li>
+                {%endif%}
+                {% if user.is_authenticated %}
+                    <li><a href="{% url 'logout' %}">Cerrar Sesión</a></li>
+                {% else %}
+                    <li><a href="{% url 'login' %}">Iniciar Sesión</a></li>
+                {% endif %}
             </ul>
         </nav>
-        {% if request.path == '/' or request.path == '/index/' %}  
-            <img src="{% static 'app/images/dragonblanco.png' %}" alt="Logo" class="logo">
 
-            <h1>        
+        {% if request.path == '/' or request.path == '/index/' %}
+            <img src="{% static 'app/images/dragonblanco.png' %}" alt="Logo" class="logo">
+            <h1>
                 <span>Perla</span>
                 <span>Negra</span>
                 <span>Ink</span>
             </h1>
         {% endif %}            
+
         {% block content %}
         {% endblock %}
     </div>

@@ -1,0 +1,23 @@
+{% extends 'app/index.html' %}
+
+{% block content %}
+<div class="login-container">
+    <h1 class="h1-form">Inicio Sesión</h1>
+    <form method="POST" class="login-form">
+        {% csrf_token %}
+        
+        <div class="login-group">
+            <label for="id_email">Email:</label>
+            {{ form.email }}
+        </div>
+
+        <div class="login-group">
+            <label for="id_password">Contraseña:</label>
+            {{ form.password }}
+        </div>
+
+        <button type="submit" class="login-button">Iniciar Sesión</button>
+    </form>
+    <p class="p-login">¿No tienes una cuenta? <a href="{% url 'registro' %}">Regístrate aquí</a></p>
+</div>
+{% endblock %}

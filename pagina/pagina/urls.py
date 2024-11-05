@@ -17,11 +17,22 @@ from django.contrib import admin
 from django.urls import path
 from app import views
 
+
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('',views.index,name='inicio'),
+    path('registro/', views.register, name='registro'),
+    path('login/', views.user_login, name='login'),
+    path('logout/', views.user_logout, name='logout'),
+    path('solicitar_cita/', views.solicitar_cita, name='solicitar_cita'),
+    path('cancelar_cita/<int:cita_id>/', views.cancelar_cita_admin, name='cancelar_cita_admin'),
+    path('cancelar_cita_cliente/<int:cita_id>/', views.cancelar_cita_cliente, name='cancelar_cita_cliente'),
+    path('citas/editar/<int:cita_id>/', views.editar_cita_cliente, name='editar_cita_cliente'),
+    path('mis_citas/', views.mis_citas, name='mis_citas'),
+    path('confirmar_cita/<int:cita_id>/', views.confirmar_cita, name='confirmar_cita'),
     path('tatuadores/',views.tatuadores,name='tatuadores'),
-    path('agregar_tatuador/', views.agregar_tatuador, name='agregar_tatuador'),
-    path('agregar_cliente/', views.agregar_cliente, name='agregar_cliente'),
+    path('citas/',views.lista_citas,name='citas'),
+#   path('agregar_tatuador/', views.agregar_tatuador, name='agregar_tatuador'),
+#   path('agregar_cliente/', views.agregar_cliente, name='agregar_cliente'),
     path('agregar_cita/', views.agregar_cita, name='agregar_cita'),
 ]

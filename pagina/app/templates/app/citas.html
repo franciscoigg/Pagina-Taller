@@ -1,0 +1,38 @@
+{% extends 'app/index.html' %}
+
+{% block content %}
+<div class="form-container">
+    <h1 class="h1-form">Lista de Citas</h1>
+    <table>
+        <tr>
+            <th>Fecha</th>
+            <th>Hora</th>
+            <th>Estado</th>
+            <th>Tatuador</th>
+            <th>Cliente</th>
+            <th>Acciones</th> 
+        </tr>
+        {% for cita in citas %}
+            <tr>
+                <td>{{ cita.fecha }}</td>
+                <td>{{ cita.hora }}</td>
+                <td>{{ cita.estado }}</td>
+                <td>{{ cita.tatuador.nombre }}</td>
+                <td>{{ cita.cliente.nombre }}</td>
+                <td>
+                    {% if cita.estado.nombre == "Solicitada" %}
+                        {% if request.user.is_staff %}
+                            <a href="{% url 'confirmar_cita' cita.cita_id %}">Confirmar</a>
+                            <a href="{% url 'cancelar_cita_admin' cita_id=cita.cita_id %}">Cancelar</a>
+                        {% endif %}
+                    {% endif %}
+                </td>
+            </tr>
+        {% empty %}
+            <tr>
+                <td colspan="6">No hay citas registradas.</td>
+            </tr>
+        {% endfor %}
+    </table>
+</div>
+{% endblock %}

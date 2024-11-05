@@ -1,10 +1,25 @@
 {% extends 'app/index.html' %}
 
 {% block content %}
-<h1>Agregar Cita</h1>
-<form method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Agregar Cita</button>
-</form>
+<div class="form-container">
+    <h2>Agregar Cita</h2>
+    <form method="post">
+        {% csrf_token %}
+        
+        <label for="id_tatuador">Tatuador:</label>
+        {{ form.tatuador }}
+
+        <label for="id_tatuador">Tatuador:</label>
+        {{ form.cliente }}
+
+        <label for="id_fecha">Fecha:</label>
+        {{ form.fecha }}
+
+        <label for="id_hora">Hora:</label>
+        {{ form.hora }}
+
+        <button type="submit" class="login-button">Agregar Cita</button>
+    </form>
+</div>
 {% endblock %}
+

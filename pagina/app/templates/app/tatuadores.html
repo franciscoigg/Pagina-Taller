@@ -1,4 +1,19 @@
 {% extends 'app/index.html' %}
 
 {% block content %}
+
+<div class="tatuadores-list">
+    <h1 class="tatuadores-title">Lista de Tatuadores</h1>
+    {% for tatuador in tatuadores %}
+        <div class="tatuador-item">
+            <h2>{{ tatuador.nombre }}</h2>
+            <p><strong>Especialidad:</strong> {{ tatuador.especialidad }}</p>
+            <p><strong>Disponibilidad:</strong> {{ tatuador.disponibilidad }}</p>
+            <p><strong>Teléfono:</strong> {{ tatuador.telefono }}</p>
+        </div>
+    {% empty %}
+        <p>No hay tatuadores registrados.</p>
+    {% endfor %}
+</div>
+
 {% endblock %}

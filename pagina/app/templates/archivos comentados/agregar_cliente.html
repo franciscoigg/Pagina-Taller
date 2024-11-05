@@ -1,0 +1,13 @@
+{% extends 'app/index.html' %}
+
+
+{% block content %}
+<div class="form-container">
+    <h1 class="h1-form">Agregar Cliente</h1>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Guardar</button>
+    </form>
+</div>
+{% endblock %}
