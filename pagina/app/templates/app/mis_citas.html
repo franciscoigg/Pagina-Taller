@@ -17,7 +17,7 @@
             <tr>
                 <td>{{ cita.fecha }}</td>
                 <td>{{ cita.hora }}</td>
-                <td>{{ cita.estado.nombre }}</td>
+                <td>{{ cita.estado_nombre }}</td>
                 <td>
                     {% if cita.estado.nombre != "Cancelada" %}
                         <form action="{% url 'cancelar_cita_cliente' cita.cita_id %}" method="post" style="display:inline;">

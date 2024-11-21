@@ -35,4 +35,5 @@ urlpatterns = [
 #   path('agregar_tatuador/', views.agregar_tatuador, name='agregar_tatuador'),
 #   path('agregar_cliente/', views.agregar_cliente, name='agregar_cliente'),
     path('agregar_cita/', views.agregar_cita, name='agregar_cita'),
+    path('contactanos/', views.contactanos, name='contactanos'),
 ]

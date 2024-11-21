@@ -32,6 +32,9 @@
                 {% if user.is_authenticated and not request.user.is_staff %}
                     <li><a href="{% url 'solicitar_cita' %}">Solicitar cita</a></li>
                 {%endif%}
+
+                <li><a href="{% url 'contactanos' %}">Contáctanos</a></li>
+                
                 {% if user.is_authenticated %}
                     <li><a href="{% url 'logout' %}">Cerrar Sesión</a></li>
                 {% else %}

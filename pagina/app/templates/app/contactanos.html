@@ -1,0 +1,34 @@
+{% extends "app/index.html" %}
+
+{% block content %}
+    <div class="contact-container">
+        <h1 class="h1-form">Contáctanos</h1>
+
+        <div class="contact-form">
+            <p class="contact-info">
+                ¿Quieres ser parte de nuestro equipo? <br>
+                <strong>Teléfono:</strong> +569 6841 6832 <br>
+                <strong>Email:</strong> contacto@perlanegra.com <br>
+                <strong>Ubicación:</strong> Coimbra 23, Copiapo, Chile  
+            </p>
+
+            <!-- Aquí puedes añadir el formulario si es necesario -->
+            <form method="post" class="form-contact">
+                {% csrf_token %}
+                <div class="form-group">
+                    <label for="name">Nombre</label>
+                    <input type="text" id="name" name="name" required>
+                </div>
+                <div class="form-group">
+                    <label for="email">Correo Electrónico</label>
+                    <input type="email" id="email" name="email" required>
+                </div>
+                <div class="form-group">
+                    <label for="message">Mensaje</label>
+                    <textarea id="message" name="message" rows="4" required></textarea>
+                </div>
+                <button type="submit" class="contact-button">Enviar</button>
+            </form>
+        </div>
+    </div>
+{% endblock %}

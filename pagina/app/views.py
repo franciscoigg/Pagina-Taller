@@ -8,8 +8,51 @@ from django.contrib.auth import login,logout
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.http import require_POST
+from django.http import HttpResponse
 
 
+# procedure
+
+from django.db import connection
+
+def obtener_citas_cliente(cliente_id):
+    with connection.cursor() as cursor:
+        # Llamar al procedimiento almacenado en la base de datos
+        cursor.callproc('obtener_citas_cliente', [cliente_id])
+        
+        # Obtener los resultados
+        resultados = cursor.fetchall()
+        
+    # Estructurar los resultados en un formato útil para tu aplicación
+    citas = []
+    for row in resultados:
+        cita = {
+            'cita_id': row[0],
+            'fecha': row[1],
+            'hora': row[2],
+            'estado_nombre': row[3],
+            'tatuador_nombre': row[4]
+        }
+
+        try:
+            estado = EstadoCita.objects.get(nombre=cita['estado_nombre'])
+            cita['estado_nombre'] = estado.nombre  # Añadimos el nombre del estado
+        except EstadoCita.DoesNotExist:
+            # Si no se encuentra el estado por nombre, asignamos un nombre por defecto
+            cita['estado_nombre'] = 'Estado desconocido'
+
+        citas.append(cita)
+    
+    return citas
+
+def actualizar_estado_cita(cita_id, nuevo_estado_id):
+    with connection.cursor() as cursor:
+        # Llamar al procedimiento almacenado en la base de datos
+        cursor.callproc('actualizar_estado_cita', [cita_id, nuevo_estado_id])
+
+def insertar_cita(cliente_id, tatuador_id, fecha, hora, estado_id):
+    with connection.cursor() as cursor:
+        cursor.callproc('insertar_cita', [cliente_id, tatuador_id, fecha, hora, estado_id])
 
 
 # login
@@ -66,7 +109,10 @@ def user_logout(request):
 
 @login_required
 def mis_citas(request):
-    citas = Cita.objects.filter(cliente=request.user.cliente).order_by('-fecha', '-hora')
+    cliente_id = request.user.cliente.cliente_id
+    citas = Cita.objects.filter(cliente__cliente_id=cliente_id).order_by('-fecha', '-hora')
+    citas = obtener_citas_cliente(cliente_id)
+    
     return render(request, 'app/mis_citas.html', {'citas': citas})
 
 @login_required
@@ -222,3 +268,25 @@ def agregar_cita(request):
         form = AgregarCitaForm()
     return render(request, 'app/agregar_cita.html', {'form': form})
 
+
+def contactanos(request):
+    if request.method == 'POST':
+        nombre = request.POST.get('nombre')
+        email = request.POST.get('email')
+        mensaje = request.POST.get('mensaje')
+
+        # Aquí podrías realizar alguna validación si es necesario.
+
+        # Enviar el mensaje por email
+        send_mail(
+            f'Mensaje de {nombre} ({email})',
+            mensaje,
+            settings.DEFAULT_FROM_EMAIL,
+            ['contacto@perlanegra.com'],
+            fail_silently=False,
+        )
+
+        # Mensaje de éxito (puedes redirigir o mostrar un mensaje)
+        return HttpResponse('Gracias por tu mensaje. Nos pondremos en contacto contigo pronto.')
+
+    return render(request, 'app/contactanos.html')

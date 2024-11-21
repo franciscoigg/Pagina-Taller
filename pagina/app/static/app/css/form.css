@@ -70,7 +70,7 @@ input, select {
 
 /* Item individual de tatuador */
 .tatuador-item {
-    background-color: #5b5b5b74;
+    background-color: #5b5b5b93;
     padding: 20px;
     margin-bottom: 20px;
     border-radius: 8px;
@@ -79,22 +79,104 @@ input, select {
 
 .tatuador-item h2 {
     font-size: 1.6rem;
-    color: #ffffff;
+    color: #e7e4e4;
     margin-bottom: 10px;
 }
 
-.tatuador-item p {
-    font-size: 1rem;
-    color: #666;
-}
-
 .tatuador-item strong {
-    color: #ffffff;
+    color: #0a0a0a;
 }
 
 /* Mensaje cuando no hay tatuadores */
 .tatuadores-list p {
-    text-align: center;
+    text-align: left;
     font-size: 1.2rem;
-    color: #999;
+    color: #ffffff;
+}
+
+/* Estilo para la página de Contacto */
+.contact-container {
+    max-width: 800px;
+    margin: 50px auto;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    background-color: #5b5b5b93;
+
+}
+
+.h1-form {
+    text-align: center;
+    color: #ffffff; /* Color del título */
+    font-size: 2rem;
+    margin-bottom: 30px;
+}
+
+.contact-info {
+    text-align: left;
+    font-size: 1.2rem;
+    color: #ffffff;
+    margin-bottom: 20px;
+}
+
+.contact-info strong {
+    text-align: left;
+    color: #0a0a0a;
+}
+
+.contact-form {
+
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.form-contact {
+    display: flex;
+    flex-direction: column;
+}
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+label {
+    margin-bottom: 5px;
+    font-weight: bold;
+    display: block;
+}
+
+input, textarea {
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    width: 100%;
+}
+
+textarea {
+    resize: vertical;
+}
+
+.contact-button {
+    padding: 10px;
+    background-color: #424242;
+    border: none;
+    color: white;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.contact-button:hover {
+    background-color: #4cae4c;
+}
+
+.contact-info a {
+    color: #4cae4c;
+    text-decoration: none;
+}
+
+.contact-info a:hover {
+    text-decoration: underline;
 }
