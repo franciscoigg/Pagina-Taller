@@ -9,6 +9,7 @@ from django.contrib.auth import authenticate, login
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.http import require_POST
 from django.http import HttpResponse
+from datetime import datetime
 
 
 # procedure
@@ -23,7 +24,7 @@ def obtener_citas_cliente(cliente_id):
         # Obtener los resultados
         resultados = cursor.fetchall()
         
-    # Estructurar los resultados en un formato útil para tu aplicación
+
     citas = []
     for row in resultados:
         cita = {
@@ -38,7 +39,7 @@ def obtener_citas_cliente(cliente_id):
             estado = EstadoCita.objects.get(nombre=cita['estado_nombre'])
             cita['estado_nombre'] = estado.nombre  # Añadimos el nombre del estado
         except EstadoCita.DoesNotExist:
-            # Si no se encuentra el estado por nombre, asignamos un nombre por defecto
+            
             cita['estado_nombre'] = 'Estado desconocido'
 
         citas.append(cita)
@@ -187,8 +188,15 @@ def notificar_tatuador(cita):
             fail_silently=False,
         )
 
+def privacidad(request):
+    return render(request,'app/privacidad.html')
+
+def terminos(request):
+    return render(request,'app/terminos.html')
+
 def index(request):
-    return render(request,'app/index.html')
+    current_year = datetime.now().year
+    return render(request, 'app/index.html', {'current_year': current_year})
 
 def lista_citas(request):
     citas = Cita.objects.order_by('-fecha', '-hora') 
@@ -275,8 +283,6 @@ def contactanos(request):
         email = request.POST.get('email')
         mensaje = request.POST.get('mensaje')
 
-        # Aquí podrías realizar alguna validación si es necesario.
-
         # Enviar el mensaje por email
         send_mail(
             f'Mensaje de {nombre} ({email})',
@@ -286,7 +292,6 @@ def contactanos(request):
             fail_silently=False,
         )
 
-        # Mensaje de éxito (puedes redirigir o mostrar un mensaje)
         return HttpResponse('Gracias por tu mensaje. Nos pondremos en contacto contigo pronto.')
 
     return render(request, 'app/contactanos.html')

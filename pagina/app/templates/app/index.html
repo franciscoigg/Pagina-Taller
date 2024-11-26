@@ -55,5 +55,16 @@
         {% block content %}
         {% endblock %}
     </div>
+    {% if request.path == '/' or request.path == '/index/' %}
+        <footer>
+            <div class="footer-content">
+                <p>&copy; {{ current_year }} Perla Negra Ink. Todos los derechos reservados.</p>
+                <ul class="footer-links">
+                    <li><a href="{% url 'terminos' %}">Términos del servicio</a></li>
+                    <li><a href="{% url 'privacidad' %}">Política de privacidad</a></li>
+                </ul>
+            </div>
+        </footer>
+    {%endif%}
 </body>
 </html>
