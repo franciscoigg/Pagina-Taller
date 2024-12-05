@@ -86,6 +86,9 @@ DATABASES = {
         'PASSWORD': 'tatuadoresdb',                  
         'HOST': 'database-tatuadores.cx4o6u00057r.us-east-2.rds.amazonaws.com',                   
         'PORT': '3306',  
+        'OPTIONS': {
+            'sql_mode': 'STRICT_TRANS_TABLES',
+        },
     }
 }
 

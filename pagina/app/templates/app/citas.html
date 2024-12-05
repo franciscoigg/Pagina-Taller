@@ -3,12 +3,20 @@
 {% block content %}
 <div class="form-container">
     <h1 class="h1-form">Lista de Citas</h1>
+
+    <form method="get" action="{% url 'citas' %}" class="filter-form">
+        <label for="fecha">Seleccionar fecha:</label>
+        <input type="date" name="fecha" value="{{ fecha_filtrada }}">
+        <button type="submit" class="btn-filtrar">Filtrar</button>
+        {% if fecha_filtrada %}
+            <a href="{% url 'citas' %}" name="clear_filter" form="clear-filter-form" class="btn-eliminar-filtro">Borrar</a>
+        {% endif %}
+    </form>
     <table>
         <tr>
             <th>Fecha</th>
             <th>Hora</th>
             <th>Estado</th>
-            <th>Tatuador</th>
             <th>Cliente</th>
             <th>Acciones</th> 
         </tr>
@@ -17,7 +25,6 @@
                 <td>{{ cita.fecha }}</td>
                 <td>{{ cita.hora }}</td>
                 <td>{{ cita.estado }}</td>
-                <td>{{ cita.tatuador.nombre }}</td>
                 <td>{{ cita.cliente.nombre }}</td>
                 <td>
                     {% if cita.estado.nombre == "Solicitada" %}

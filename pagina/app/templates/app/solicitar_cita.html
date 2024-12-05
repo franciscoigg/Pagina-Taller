@@ -5,16 +5,24 @@
     <h2>Solicitar una Cita</h2>
     <form method="post">
         {% csrf_token %}
-        
+
         <label for="id_tatuador">Tatuador:</label>
         {{ form.tatuador }}
+        
+        {% if form.tatuador.errors %}
+            <div class="error-message">
+                {% for error in form.tatuador.errors %}
+                    <p>{{ error }}</p>
+                {% endfor %}
+            </div>
+        {% endif %}
 
         <label for="id_fecha">Fecha:</label>
         {{ form.fecha }}
 
         <label for="id_hora">Hora:</label>
         {{ form.hora }}
-
+        
         <button type="submit" class="login-button">Solicitar Cita</button>
     </form>
 </div>

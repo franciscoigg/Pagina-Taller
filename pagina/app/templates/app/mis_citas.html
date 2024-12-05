@@ -3,12 +3,27 @@
 {% block content %}
 <div class="form-container">
     <h2>Mis Citas</h2>
+
+    <form method="get" action="{% url 'mis_citas' %}" class="filter-form">
+        <label for="fecha">Seleccionar Fecha:</label>
+        <input type="date" id="fecha" name="fecha" value="{{ fecha_filtrada|default:'' }}">
+
+        <!-- Botón Filtrar -->
+        <button type="submit" class="btn-filtrar">Filtrar</button>
+
+        <!-- Botón para eliminar el filtro -->
+        {% if fecha_filtrada %}
+            <a href="{% url 'mis_citas' %}" name="clear_filter" form="clear-filter-form" class="btn-eliminar-filtro">Borrar</a>
+        {% endif %}
+    </form>
+
     <table>
         <thead>
             <tr>
                 <th>Fecha</th>
                 <th>Hora</th>
                 <th>Estado</th>
+                <th>Tatuador</th>
                 <th>Acciones</th>
             </tr>
         </thead>
@@ -17,7 +32,8 @@
             <tr>
                 <td>{{ cita.fecha }}</td>
                 <td>{{ cita.hora }}</td>
-                <td>{{ cita.estado_nombre }}</td>
+                <td>{{ cita.estado.nombre }}</td>
+                <td>{{ cita.tatuador.nombre }} </td>
                 <td>
                     {% if cita.estado.nombre != "Cancelada" %}
                         <form action="{% url 'cancelar_cita_cliente' cita.cita_id %}" method="post" style="display:inline;">

@@ -6,7 +6,8 @@ class Tatuador(models.Model):
         ('Disponible', 'Disponible'),
         ('No disponible', 'No disponible')
     ]
-
+    
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
     tatuador_id = models.AutoField(primary_key=True)
     nombre = models.CharField(max_length=30, null=True)
     especialidad = models.CharField(max_length=30, null=True)
@@ -41,3 +42,6 @@ class Cita(models.Model):
     estado = models.ForeignKey(EstadoCita, on_delete=models.SET_NULL, null=True)
     tatuador = models.ForeignKey(Tatuador, on_delete=models.CASCADE)
     cliente = models.ForeignKey(Cliente, on_delete=models.CASCADE)
+    
+    def __str__(self):
+        return f'Cita con {self.tatuador.nombre} para {self.cliente.nombre} el {self.fecha} a las {self.hora}'

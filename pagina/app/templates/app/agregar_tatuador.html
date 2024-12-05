@@ -1,0 +1,41 @@
+{% extends 'app/index.html' %}
+
+{% block content %}
+<div class="form-container">
+    <h2>Registrar Tatuador</h2>
+    <form method="post">
+        {% csrf_token %}
+        
+        <div class="form-grid">
+            <div class="form-group">
+                <label for="id_nombre">Nombre:</label>
+                {{ form.nombre }}
+            </div>
+
+            <div class="form-group">
+                <label for="id_especialidad">Especialidad:</label>
+                {{ form.especialidad }}
+            </div>
+
+            <div class="form-group">
+                <label for="id_disponibilidad">Disponibilidad:</label>
+                {{ form.disponibilidad }}
+            </div>
+
+            <div class="form-group">
+                <label for="id_telefono">Teléfono:</label>
+                {{ form.telefono }}
+            </div>
+
+            <div class="form-group">
+                <label for="id_email">Email:</label>
+                {{ form.email }}
+            </div>
+
+            <div class="form-group full-width">
+                <button type="submit" class="contact-button">Registrar Tatuador</button>
+            </div>
+        </div>
+    </form>
+</div>
+{% endblock %}

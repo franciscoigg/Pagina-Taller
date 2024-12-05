@@ -14,29 +14,49 @@
 <body>
     <div class="container">
         <nav>
+            <img src="{% static 'app/images/dragonblanco.png' %}" alt="logo-nav" class="logo-nav">
             <ul>
                 <li><a href="{% url 'inicio' %}">Inicio</a></li>
                 <li><a href="{% url 'tatuadores' %}">Tatuadores</a></li>
+
                 {% if user.is_authenticated and not request.user.is_staff %}
-                <li><a href="{% url 'mis_citas' %}">Mis Citas</a></li>
-                {%endif%}
-                {%if request.user.is_staff  %}
-                <li><a href="{% url 'citas' %}">Citas</a></li>
-                <li class="dropdown">
-                    <a href="javascript:void(0)" class="dropbtn">Agregar Datos</a>
-                    <div class="dropdown-content">
-                        <a href="{% url 'agregar_cita' %}">Agregar Cita</a>
-                    </div>
-                </li>
-                {%endif%}
+                    <li><a href="{% url 'mis_citas' %}">Mis Citas</a></li>
+                {% endif %}
+
+                {% if request.user.is_staff and not user.is_superuser %}
+                    <!-- Aquí ocultamos la sección de "Administrar Datos" para tatuadores -->
+                    <li><a href="{% url 'citas' %}">Citas</a></li>
+                {% endif %}
+
+                {% if request.user.is_superuser %}
+                    <!-- Solo los superusuarios pueden ver la sección de administrar datos -->
+                    <li class="dropdown">
+                        <a href="javascript:void(0)" class="dropbtn">Administrar Datos</a>
+                        <div class="dropdown-content">
+                            <a href="{% url 'agregar_tatuador' %}">Agregar Tatuador</a>
+                            <a href="{% url 'agregar_cliente' %}">Agregar Cliente</a>
+                            <a href="{% url 'agregar_cita' %}">Agregar Cita</a>
+                        </div>
+                    </li>
+                    <li><a href="{% url 'citas' %}">Citas</a></li>
+                {% endif %}
+
                 {% if user.is_authenticated and not request.user.is_staff %}
                     <li><a href="{% url 'solicitar_cita' %}">Solicitar cita</a></li>
-                {%endif%}
+                {% endif %}
 
                 <li><a href="{% url 'contactanos' %}">Contáctanos</a></li>
-                
+
                 {% if user.is_authenticated %}
-                    <li><a href="{% url 'logout' %}">Cerrar Sesión</a></li>
+                    <li class="user-info dropdown">
+                        <span>Bienvenido, {{ user.username }}</span>
+                        <div class="dropdown-content">
+                            <form action="{% url 'logout' %}" method="post">
+                                {% csrf_token %}
+                                <button type="submit" class="logout-button">Cerrar Sesión</button>
+                            </form>
+                        </div>
+                    </li>
                 {% else %}
                     <li><a href="{% url 'login' %}">Iniciar Sesión</a></li>
                 {% endif %}
@@ -55,6 +75,7 @@
         {% block content %}
         {% endblock %}
     </div>
+
     {% if request.path == '/' or request.path == '/index/' %}
         <footer>
             <div class="footer-content">
@@ -65,6 +86,6 @@
                 </ul>
             </div>
         </footer>
-    {%endif%}
+    {% endif %}
 </body>
 </html>

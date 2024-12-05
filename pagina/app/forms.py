@@ -1,7 +1,7 @@
 from django import forms
 from app.models import Tatuador, Cliente, Cita
 from django.contrib.auth.models import User
-
+from datetime import datetime
 
 
 class UserLoginForm(forms.Form):
@@ -13,6 +13,11 @@ class TatuadorForm(forms.ModelForm):
     class Meta:
         model = Tatuador
         fields = ['nombre', 'especialidad', 'disponibilidad', 'telefono','email']
+
+class EditarTatuadorForm(forms.ModelForm):
+    class Meta:
+        model = Tatuador
+        fields = ['nombre', 'especialidad', 'disponibilidad', 'telefono', 'email']
 
 class ClienteForm(forms.ModelForm):
     class Meta:
@@ -27,6 +32,7 @@ class CitaForm(forms.ModelForm):
             'fecha':forms.DateInput(attrs={'type':'date'}),
             'hora':forms.TimeInput(attrs={'type':'time'}),
         }
+    
 
 class AgregarCitaForm(forms.ModelForm):
     class Meta:
@@ -36,6 +42,7 @@ class AgregarCitaForm(forms.ModelForm):
             'fecha':forms.DateInput(attrs={'type':'date'}),
             'hora':forms.TimeInput(attrs={'type':'time'}),
         }
+    
 
 class UserRegistrationForm(forms.ModelForm):
     password = forms.CharField(widget=forms.PasswordInput)
@@ -55,4 +62,5 @@ class UserRegistrationForm(forms.ModelForm):
 
         return cleaned_data
 
-
+class CitaFilterForm(forms.Form):
+    fecha = forms.DateField(widget=forms.DateInput(attrs={'type': 'date'}), initial=datetime.today)

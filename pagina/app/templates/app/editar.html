@@ -1,0 +1,10 @@
+{% extends 'app/index.html' %}
+
+{% block content %}
+
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="contact-button">Guardar cambios</button>
+    </form>
+{% endblock %}

@@ -33,6 +33,24 @@ nav ul li a {
 }
 
 /* Estilos del menú desplegable */
+/* Estilos adicionales para el botón de Cerrar Sesión */
+.logout-button {
+    color: white;
+    padding: 12px 16px;
+    background-color: #333; /* Fondo oscuro similar al de los otros elementos del dropdown */
+    border: none;
+    width: 100%; /* Asegura que el botón ocupe todo el ancho del menú desplegable */
+    text-align: left; /* Alineación del texto a la izquierda */
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+.logout-button:hover {
+    background-color: #575757; /* Efecto hover similar a los enlaces */
+}
+
+
+/* Estilos del dropdown */
 .dropdown .dropbtn {
     cursor: pointer;
 }
@@ -58,7 +76,28 @@ nav ul li a {
     background-color: #575757;
 }
 
-/* Mostrar el menú desplegable al pasar el cursor */
 .dropdown:hover .dropdown-content {
     display: block;
+}
+
+nav .logo-nav {
+    position: absolute; 
+    left: 0; 
+    top: 50%; 
+    transform: translateY(-50%); 
+    width: auto; 
+    height: 40px; 
+    margin: 0; 
+    padding: 0; 
+}
+
+nav .user-info {
+    position: absolute; 
+    right: 5px; 
+    top: 50%; 
+    transform: translateY(-50%); 
+    width: auto; 
+    height: 40px; 
+    margin-top: 10px;
+    padding: 0; 
 }

@@ -2,7 +2,7 @@ body, html {
     margin: 0;
     padding: 0;
     height: 100%;
-    font-family: 'Permanent Marker', cursive;
+    font-family: sans-serif;
     background-color: black;
 }
 
@@ -86,4 +86,59 @@ footer .footer-links a:hover {
     max-width: 900px; 
     margin: 0 auto;
     padding: 20px;
+}
+
+.btn-eliminar {
+    background-color: #ff4d4d; /* Color de fondo rojo */
+    color: white; /* Color de texto blanco */
+    padding: 10px 20px; /* Espaciado interno */
+    border-radius: 5px; /* Bordes redondeados */
+    text-decoration: none; /* Eliminar el subrayado del enlace */
+    font-weight: bold; /* Texto en negrita */
+    display: inline-block;
+    transition: background-color 0.3s ease; /* Efecto de transición al pasar el mouse */
+}
+
+.btn-eliminar:hover {
+    background-color: #e60000; /* Rojo más oscuro al pasar el mouse */
+    cursor: pointer; /* Cambia el cursor para indicar interactividad */
+}
+
+.btn-eliminar:active {
+    background-color: #cc0000; /* Rojo al hacer clic */
+}
+
+.btn-editar {
+    background-color: #4CAF50;
+    color: white;
+    padding: 10px 15px;
+    text-decoration: none;
+    border-radius: 5px;
+}
+
+.btn-editar:hover {
+    background-color: #45a049;
+}
+
+.error-message {
+    color: red;
+    font-size: 14px;
+    margin-top: 5px;
+}
+
+.contenedor {
+    display: flex;
+    flex-direction: column;
+    height: 100vh; /* Altura total de la ventana */
+}
+
+
+.btn-agg {
+    background-color: #4CAF50;
+    color: white;
+    padding: 10px 20px;
+    text-decoration: none;
+    border-radius: 5px;
+    margin-top: 20px; /* Un pequeño margen encima del botón */
+    align-self: flex-end; /* Opcional: para alinear el botón a la derecha */
 }

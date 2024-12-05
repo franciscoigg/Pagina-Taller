@@ -2,19 +2,52 @@
 
 {% block content %}
 
-<div class="tatuadores-list">
-    <h1 class="tatuadores-title">Lista de Tatuadores</h1>
-    {% for tatuador in tatuadores %}
-        <div class="tatuador-item">
-            <h2>{{ tatuador.nombre }}</h2>
-            <p><strong>Especialidad:</strong> {{ tatuador.especialidad }}</p>
-            <p><strong>Disponibilidad:</strong> {{ tatuador.disponibilidad }}</p>
-            <p><strong>Teléfono:</strong> {{ tatuador.telefono }}</p>
-        </div>
-    {% empty %}
+<!-- Contenedor Flex para alinear los elementos -->
+<div class="contenedor">
+    <h1 class="h1-form">Lista de Tatuadores</h1>
+
+    {% if tatuadores %}
+    <table class="tabla">
+        <thead>
+            <tr>
+                <th>Nombre</th>
+                <th>Especialidad</th>
+                <th>Disponibilidad</th>
+                <th>Teléfono</th>
+                {% if user.is_superuser %}
+                <th>Acciones</th>
+                {% endif %}
+            </tr>
+        </thead>
+        <tbody>
+            {% for tatuador in tatuadores %}
+            <tr>
+                <td>{{ tatuador.nombre }}</td>
+                <td>{{ tatuador.especialidad }}</td>
+                <td>{{ tatuador.disponibilidad }}</td>
+                <td>{{ tatuador.telefono }}</td>
+                
+                {% if user.is_superuser %}
+                <td>
+                    <a href="{% url 'editar_tatuador' tatuador_id=tatuador.tatuador_id %}" class="btn-editar">Editar</a>
+                    <a href="{% url 'eliminar_tatuador' tatuador_id=tatuador.tatuador_id %}" class="btn-eliminar" 
+                        onclick="return confirm('¿Estás seguro de que deseas eliminar a este tatuador?');">
+                        Eliminar
+                    </a>
+                </td>
+                {% endif %}
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
         <p>No hay tatuadores registrados.</p>
-    {% endfor %}
+    {% endif %}
+
+    <!-- Botón Agregar Tatuador (colocado al final) -->
+    {% if user.is_superuser %}
+    <a href="{% url 'agregar_tatuador' %}" class="btn-agg">Agregar Tatuador</a>
+    {% endif %}
 </div>
 
 {% endblock %}
-        

@@ -1,12 +1,12 @@
 from django.shortcuts import render,redirect,get_object_or_404
-from app.forms import AgregarCitaForm, ClienteForm, CitaForm,UserRegistrationForm,UserLoginForm
-from app.models import Tatuador,Cita,EstadoCita
+from app.forms import AgregarCitaForm, ClienteForm, CitaForm,UserRegistrationForm,UserLoginForm, TatuadorForm, EditarTatuadorForm
+from app.models import Tatuador,Cita,EstadoCita,Cliente
 from django.conf import settings
 from django.core.mail import send_mail
 from django.contrib.auth.models import User
 from django.contrib.auth import login,logout
 from django.contrib.auth import authenticate, login
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required, user_passes_test
 from django.views.decorators.http import require_POST
 from django.http import HttpResponse
 from datetime import datetime
@@ -16,12 +16,30 @@ from datetime import datetime
 
 from django.db import connection
 
+def obtener_clientes_por_tatuador(tatuador_id):
+    with connection.cursor() as cursor:
+        cursor.callproc('obtener_clientes_por_tatuador', [tatuador_id])
+        
+        resultados = cursor.fetchall()
+    
+
+    clientes = []
+    for row in resultados:
+        cliente = {
+            'nombre': row[0],
+            'email': row[1],
+            'telefono': row[2],
+            'fecha': row[3],
+            'hora': row[4]
+        }
+        clientes.append(cliente)
+    
+    return clientes
+
 def obtener_citas_cliente(cliente_id):
     with connection.cursor() as cursor:
-        # Llamar al procedimiento almacenado en la base de datos
+
         cursor.callproc('obtener_citas_cliente', [cliente_id])
-        
-        # Obtener los resultados
         resultados = cursor.fetchall()
         
 
@@ -37,7 +55,7 @@ def obtener_citas_cliente(cliente_id):
 
         try:
             estado = EstadoCita.objects.get(nombre=cita['estado_nombre'])
-            cita['estado_nombre'] = estado.nombre  # Añadimos el nombre del estado
+            cita['estado_nombre'] = estado.nombre 
         except EstadoCita.DoesNotExist:
             
             cita['estado_nombre'] = 'Estado desconocido'
@@ -111,10 +129,15 @@ def user_logout(request):
 @login_required
 def mis_citas(request):
     cliente_id = request.user.cliente.cliente_id
-    citas = Cita.objects.filter(cliente__cliente_id=cliente_id).order_by('-fecha', '-hora')
-    citas = obtener_citas_cliente(cliente_id)
-    
-    return render(request, 'app/mis_citas.html', {'citas': citas})
+    fecha_filtrada = request.GET.get('fecha')  # Obtener la fecha seleccionada
+
+    # Filtrar las citas por fecha si es proporcionada
+    if fecha_filtrada:
+        citas = Cita.objects.filter(cliente__cliente_id=cliente_id, fecha=fecha_filtrada).order_by('-fecha', '-hora')
+    else:
+        citas = Cita.objects.filter(cliente__cliente_id=cliente_id).order_by('-fecha', '-hora')
+
+    return render(request, 'app/mis_citas.html', {'citas': citas, 'fecha_filtrada': fecha_filtrada})
 
 @login_required
 def cancelar_cita_cliente(request, cita_id):
@@ -161,14 +184,23 @@ def solicitar_cita(request):
         form = CitaForm(request.POST)
         if form.is_valid():
             cita = form.save(commit=False)
-            cita.cliente = request.user.cliente 
+            
+            tatuador = cita.tatuador
+            if tatuador.disponibilidad == 'No disponible':
+                form.add_error('tatuador', 'Este tatuador no está disponible.')
+                return render(request, 'app/solicitar_cita.html', {'form': form})
+
+            cita.cliente = request.user.cliente
             estado_solicitada = EstadoCita.objects.get(nombre="Solicitada")
             cita.estado = estado_solicitada
             cita.save()
+            
+        
             notificar_tatuador(cita)
             return redirect('mis_citas')
     else:
         form = CitaForm()
+    
     return render(request, 'app/solicitar_cita.html', {'form': form})
 
 def notificar_tatuador(cita):
@@ -198,9 +230,28 @@ def index(request):
     current_year = datetime.now().year
     return render(request, 'app/index.html', {'current_year': current_year})
 
+@login_required
 def lista_citas(request):
-    citas = Cita.objects.order_by('-fecha', '-hora') 
-    return render(request, 'app/citas.html', {'citas': citas})
+    # Obtener el parámetro de fecha del filtro
+    fecha_filtrada = request.GET.get('fecha')
+
+    # Verificar si el usuario tiene un tatuador asociado
+    if hasattr(request.user, 'tatuador'):
+        tatuador = request.user.tatuador
+        
+        # Filtrar las citas por fecha si se proporciona, de lo contrario mostrar todas las citas
+        if fecha_filtrada:
+            citas = Cita.objects.filter(tatuador=tatuador, fecha=fecha_filtrada).order_by('-hora')
+        else:
+            citas = Cita.objects.filter(tatuador=tatuador).order_by('-fecha', '-hora')
+        
+        print(f"Citas encontradas para el tatuador {tatuador.user.username}: {citas}")
+    else:
+        citas = Cita.objects.none()  # Si el usuario no tiene un tatuador asociado
+        print("El usuario no tiene un tatuador asociado")
+    
+    # Retornar las citas al template, incluyendo la fecha filtrada
+    return render(request, 'app/citas.html', {'citas': citas, 'fecha_filtrada': fecha_filtrada})
 
 @login_required
 def cancelar_cita_admin(request, cita_id):
@@ -227,32 +278,80 @@ def confirmar_cita(request, cita_id):
 
     return redirect('citas')
 
+def is_superuser(user):
+    return user.is_superuser
 
-#def agregar_tatuador(request):
-#    if request.method == 'POST':
-#        form = TatuadorForm(request.POST)
-#        if form.is_valid():
-#            form.save()
-#            return redirect('inicio') 
-#    else:
-#        form = TatuadorForm()
-#    return render(request, 'app/agregar_tatuador.html', {'form': form})
+@login_required
+@user_passes_test(is_superuser)
+def editar_tatuador(request, tatuador_id):
+    tatuador = get_object_or_404(Tatuador, tatuador_id=tatuador_id)
+
+    if request.method == 'POST':
+        form = EditarTatuadorForm(request.POST, instance=tatuador)
+        if form.is_valid():
+            form.save()
+            return redirect('tatuadores') 
+    else:
+        form = EditarTatuadorForm(instance=tatuador)
+
+    return render(request, 'app/editar.html', {'form': form})
+
+@login_required
+@user_passes_test(is_superuser)
+def eliminar_tatuador(request, tatuador_id):
+    tatuador = get_object_or_404(Tatuador, tatuador_id=tatuador_id)
+    if tatuador.user:
+        tatuador.user.delete()
+    
+    if Cita.objects.filter(tatuador=tatuador).exists():
+        return redirect('tatuadores')  
+        
+    tatuador.delete()
+    return redirect('tatuadores')
+
+@login_required
+@user_passes_test(is_superuser)
+def agregar_tatuador(request):
+    if request.method == 'POST':
+        form = TatuadorForm(request.POST)
+        if form.is_valid():
+            tatuador = form.save(commit=False)
+            
+            user = User.objects.create_user(username=tatuador.email, email=tatuador.email, password="123")
+            user.is_staff = True
+            tatuador.user = user
+            tatuador.save()
+
+            return redirect('tatuadores')
+    else:
+        form = TatuadorForm()
+    
+    return render(request, 'app/agregar_tatuador.html', {'form': form})
 
 def tatuadores(request):
     tatuadores = Tatuador.objects.all() 
     return render(request, 'app/tatuadores.html', {'tatuadores': tatuadores})
 
+@login_required
+@user_passes_test(is_superuser)
+def agregar_cliente(request):
+    if request.method == 'POST':
+        form = ClienteForm(request.POST)
+        if form.is_valid():
+            cliente = form.save(commit=False)
+            if not cliente.user:
+                user = User.objects.create_user(username=cliente.email, email=cliente.email, password="123")
+                cliente.user = user
+            cliente.save()
 
-#def agregar_cliente(request):
-#    if request.method == 'POST':
-#        form = ClienteForm(request.POST)
-#        if form.is_valid():
-#            form.save()
-#            return redirect('inicio')
-#    else:
-#        form = ClienteForm()
-#    return render(request, 'app/agregar_cliente.html', {'form': form})
+            return redirect('inicio')
+    else:
+        form = ClienteForm()
 
+    return render(request, 'app/agregar_cliente.html', {'form': form})
+
+@login_required
+@user_passes_test(is_superuser)
 def agregar_cita(request):
     if request.method == 'POST':
         print(request.POST)  
@@ -285,13 +384,11 @@ def contactanos(request):
 
         # Enviar el mensaje por email
         send_mail(
-            f'Mensaje de {nombre} ({email})',
+            f'{nombre} quiere formar parte del equipo ({email})',
             mensaje,
             settings.DEFAULT_FROM_EMAIL,
-            ['contacto@perlanegra.com'],
+            ['fraanciscoigg@gmail.com'],
             fail_silently=False,
         )
-
-        return HttpResponse('Gracias por tu mensaje. Nos pondremos en contacto contigo pronto.')
 
     return render(request, 'app/contactanos.html')
